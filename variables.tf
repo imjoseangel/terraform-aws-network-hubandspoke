@@ -3,10 +3,16 @@ variable "identifier" {
   description = "String to identify the whole Hub and Spoke environment."
 }
 
-variable "transit_gateway_id" {
-  type        = string
-  description = "Transit Gateway ID. **If you specify this value, transit_gateway_attributes can't be set**."
-  default     = null
+# variable "transit_gateway_id" {
+#   type        = string
+#   description = "Transit Gateway ID. **If you specify this value, transit_gateway_attributes can't be set**."
+#   default     = null
+# }
+
+variable "create_transit_gateway" {
+  description = "Whether to create transit gateway or not"
+  type        = bool
+  default     = true
 }
 
 variable "transit_gateway_attributes" {
