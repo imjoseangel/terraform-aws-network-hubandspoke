@@ -4,6 +4,11 @@ variable "transit_gateway_id" {
   default     = null
 }
 
+variable "identifier" {
+  type        = string
+  description = "String to identify the whole Hub and Spoke environment."
+}
+
 variable "transit_gateway_description" {
   type        = string
   description = "Transit Gateway Description"
