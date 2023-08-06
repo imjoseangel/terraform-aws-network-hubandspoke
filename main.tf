@@ -7,7 +7,7 @@ resource "aws_ec2_transit_gateway" "main" {
   description                     = var.transit_gateway_description
   default_route_table_association = "enable"
   default_route_table_propagation = "enable"
-  amazon_side_asn                 = try(var.transit_gateway_attributes.amazon_side_asn, "64512")
+  amazon_side_asn                 = try(var.transit_gateway_attributes.amazon_side_asn, "64513")
   auto_accept_shared_attachments  = try(var.transit_gateway_attributes.auto_accept_shared_attachments, "enable")
   dns_support                     = try(var.transit_gateway_attributes.dns_support, "enable")
   multicast_support               = try(var.transit_gateway_attributes.multicast_support, "disable")
