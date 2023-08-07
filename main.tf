@@ -25,19 +25,9 @@ resource "aws_ec2_transit_gateway" "main" {
 #-------------------------------
 #tfsec:ignore:aws-ec2-require-vpc-flow-logs-for-all-vpcs
 resource "aws_vpc" "main" {
-  cidr_block                       = var.cidr_block
-  ipv4_ipam_pool_id                = var.vpc_ipv4_ipam_pool_id
-  ipv4_netmask_length              = var.vpc_ipv4_netmask_length
-  assign_generated_ipv6_cidr_block = var.vpc_assign_generated_ipv6_cidr_block
-  ipv6_cidr_block                  = var.vpc_ipv6_cidr_block
-  ipv6_ipam_pool_id                = var.vpc_ipv6_ipam_pool_id
-  ipv6_netmask_length              = var.vpc_ipv6_netmask_length
+  cidr_block           = var.cidr_block
+  enable_dns_hostnames = var.enable_dns_hostnames
+  enable_dns_support   = var.enable_dns_support
 
-  enable_dns_hostnames = var.vpc_enable_dns_hostnames
-  enable_dns_support   = var.vpc_enable_dns_support
-  instance_tenancy     = var.vpc_instance_tenancy
-
-  tags = merge(
-    { "Name" = format("tgw-%s", var.identifier)
-  }, try(var.vpc_tags, {}))
+  tags = { "Name" = format("tgw-%s", var.identifier) }
 }
