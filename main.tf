@@ -31,3 +31,7 @@ resource "aws_vpc" "main" {
 
   tags = { "Name" = format("tgw-%s", var.identifier) }
 }
+
+#-------------------------------
+# PUBLIC SUBNETS
+#-------------------------------

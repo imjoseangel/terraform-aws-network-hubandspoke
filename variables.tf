@@ -59,3 +59,9 @@ variable "enable_dns_support" {
   type        = bool
   default     = true
 }
+
+variable "az_count" {
+  type        = number
+  description = "Searches region for # of AZs to use and takes a slice based on count. Assume slice is sorted a-z."
+  default     = 2
+}
