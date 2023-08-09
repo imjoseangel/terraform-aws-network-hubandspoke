@@ -46,3 +46,18 @@ resource "aws_subnet" "public" {
 
   tags = { Name = "${var.identifier}-subnet-public-${each.key}" }
 }
+
+#-------------------------------
+# PRIVATE SUBNETS
+#-------------------------------
+
+resource "aws_subnet" "private" {
+  for_each = toset(local.azs)
+
+  availability_zone       = each.key
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.cidr_block
+  map_public_ip_on_launch = true
+
+  tags = { Name = "${var.identifier}-subnet-private-${each.key}" }
+}
