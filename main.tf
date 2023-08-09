@@ -37,24 +37,12 @@ resource "aws_vpc" "main" {
 #-------------------------------
 
 resource "aws_subnet" "public" {
-  availability_zone                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
-  availability_zone_id                        = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
-  cidr_block                                  = element(concat(var.public_subnets, [""]), count.index)
-  enable_dns64                                = var.public_subnet_enable_dns64
-  enable_resource_name_dns_a_record_on_launch = var.public_subnet_enable_resource_name_dns_a_record_on_launch
-  map_public_ip_on_launch                     = var.map_public_ip_on_launch
-  private_dns_hostname_type_on_launch         = var.public_subnet_private_dns_hostname_type_on_launch
-  vpc_id                                      = aws_vpc.main.id
+  for_each = toset(local.azs)
 
-  tags = merge(
-    {
-      Name = try(
-        var.public_subnet_names[count.index],
-        format("${var.name}-${var.public_subnet_suffix}-%s", element(var.azs, count.index))
-      )
-    },
-    var.tags,
-    var.public_subnet_tags,
-    lookup(var.public_subnet_tags_per_az, element(var.azs, count.index), {})
-  )
+  availability_zone       = each.key
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.cidr_block
+  map_public_ip_on_launch = true
+
+  tags = { Name = "${each.key}" }
 }
