@@ -44,5 +44,5 @@ resource "aws_subnet" "public" {
   cidr_block              = var.cidr_block
   map_public_ip_on_launch = true
 
-  tags = { Name = "${each.key}" }
+  tags = { Name = "${var.identifier}-subnet-public-${each.key}" }
 }
