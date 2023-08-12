@@ -12,5 +12,11 @@ locals {
   # AVAILABILITY ZONES
   #-------------------------------
 
-  azs = slice(data.aws_availability_zones.main.names, 0, var.az_count)
+  availability_zones_count = slice(data.aws_availability_zones.main.names, 0, var.az_count)
+
+  subnet_netnum_factor = {
+    public  = 0
+    private = length(local.availability_zones_count)
+  }
+
 }

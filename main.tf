@@ -37,14 +37,18 @@ resource "aws_vpc" "main" {
 #-------------------------------
 
 resource "aws_subnet" "public" {
-  for_each = toset(local.azs)
+  count = length(local.availability_zones_count)
 
-  availability_zone       = each.key
+  availability_zone       = data.aws_availability_zones.main.names[count.index]
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = cidrsubnet(var.cidr_block, 3, 0)
+  cidr_block              = cidrsubnet(var.cidr_block, 4, count.index + local.subnet_netnum_factor.public)
   map_public_ip_on_launch = true
 
-  tags = { Name = "${var.identifier}-subnet-public-${each.key}" }
+  tags = { Name = "${var.identifier}-subnet-public-${data.aws_availability_zones.main.names[count.index]}" }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 #-------------------------------
@@ -52,12 +56,12 @@ resource "aws_subnet" "public" {
 #-------------------------------
 
 resource "aws_subnet" "private" {
-  for_each = toset(local.azs)
+  count = length(local.availability_zones_count)
 
-  availability_zone       = each.key
+  availability_zone       = data.aws_availability_zones.main.names[count.index]
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = cidrsubnet(var.cidr_block, 3, 2)
+  cidr_block              = cidrsubnet(var.cidr_block, 4, count.index + local.subnet_netnum_factor.private)
   map_public_ip_on_launch = true
 
-  tags = { Name = "${var.identifier}-subnet-private-${each.key}" }
+  tags = { Name = "${var.identifier}-subnet-private-${data.aws_availability_zones.main.names[count.index]}" }
 }
