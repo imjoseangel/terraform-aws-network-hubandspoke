@@ -29,7 +29,9 @@ resource "aws_vpc" "main" {
   enable_dns_hostnames = var.enable_dns_hostnames
   enable_dns_support   = var.enable_dns_support
 
-  tags = { "Name" = format("tgw-%s", var.identifier) }
+  tags = {
+    "Name" = format("vpc-%s", var.identifier)
+  }
 }
 
 #-------------------------------
@@ -44,7 +46,9 @@ resource "aws_subnet" "public" {
   cidr_block              = cidrsubnet(var.cidr_block, 4, count.index + local.subnet_netnum_factor.public)
   map_public_ip_on_launch = true
 
-  tags = { Name = "${var.identifier}-subnet-public-${data.aws_availability_zones.main.names[count.index]}" }
+  tags = {
+    Name = "${var.identifier}-subnet-public-${data.aws_availability_zones.main.names[count.index]}"
+  }
 
   lifecycle {
     create_before_destroy = true
@@ -63,5 +67,25 @@ resource "aws_subnet" "private" {
   cidr_block              = cidrsubnet(var.cidr_block, 4, count.index + local.subnet_netnum_factor.private)
   map_public_ip_on_launch = true
 
-  tags = { Name = "${var.identifier}-subnet-private-${data.aws_availability_zones.main.names[count.index]}" }
+  tags = {
+    Name = "${var.identifier}-subnet-private-${data.aws_availability_zones.main.names[count.index]}"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
+resource "aws_internet_gateway" "main" {
+
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    "Name" = format("igw-%s", var.identifier)
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
